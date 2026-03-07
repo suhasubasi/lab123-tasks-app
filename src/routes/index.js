@@ -1,4 +1,5 @@
 import express from 'express'
+import { tasksRouter } from './tasks.js'
 
 const router = express.Router()
 
@@ -8,7 +9,8 @@ router.get('/', (req, res) => {
     version: '1.0.0',
     routes: {
       home: '/',
-      health: '/health'
+      health: '/health',
+      tasks: '/api/v1/tasks'
     }
   })
 })
@@ -19,5 +21,7 @@ router.get('/health', (req, res) => {
     app: 'lab123-tasks-app'
   })
 })
+
+router.use('/api/v1', tasksRouter)
 
 export { router }
