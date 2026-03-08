@@ -2,6 +2,7 @@ import express from 'express'
 import { tasksRouter } from './tasks.js'
 import { usersRouter } from './users.js'
 import { apiKeyRouter } from './apikey.js'
+import { jwtRouter } from './jwt.js'
 
 const router = express.Router()
 
@@ -14,7 +15,9 @@ router.get('/', (req, res) => {
       health: '/health',
       tasks: '/api/v1/tasks',
       users: '/api/v1/users',
-      apikeyProtected: '/api/v1/apikey/protected'
+      apikeyProtected: '/api/v1/apikey/protected',
+      jwtLogin: '/api/v1/jwt/login',
+      jwtToken: '/api/v1/jwt/token'
     }
   })
 })
@@ -29,4 +32,5 @@ router.get('/health', (req, res) => {
 router.use('/api/v1', tasksRouter)
 router.use('/api/v1', usersRouter)
 router.use('/api/v1', apiKeyRouter)
+router.use('/api/v1', jwtRouter)
 export { router }
