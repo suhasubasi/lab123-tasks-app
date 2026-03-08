@@ -1,6 +1,7 @@
 import express from 'express'
 import { tasksRouter } from './tasks.js'
 import { usersRouter } from './users.js'
+import { apiKeyRouter } from './apikey.js'
 
 const router = express.Router()
 
@@ -12,7 +13,8 @@ router.get('/', (req, res) => {
       home: '/',
       health: '/health',
       tasks: '/api/v1/tasks',
-      users: '/api/v1/users'
+      users: '/api/v1/users',
+      apikeyProtected: '/api/v1/apikey/protected'
     }
   })
 })
@@ -26,5 +28,5 @@ router.get('/health', (req, res) => {
 
 router.use('/api/v1', tasksRouter)
 router.use('/api/v1', usersRouter)
-
+router.use('/api/v1', apiKeyRouter)
 export { router }
