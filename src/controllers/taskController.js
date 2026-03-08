@@ -1,133 +1,132 @@
+import {taskModel} from '../models/taskModel.js'
 export const controller = {}
 
-const tasks = [
-  {
-    id: 1,
-    title: 'Read Express notes',
-    completed: false
-  },
-  {
-    id: 2,
-    title: 'Practice REST API routes',
-    completed: true
-  },
-  {
-    id: 3,
-    title: 'Prepare for database step',
-    completed: false
-  }
-]
 
-function getNextId() {
-  if (tasks.length === 0) {
-    return 1
-  }
 
-  return Math.max(...tasks.map(task => task.id)) + 1
+controller.getTasks = async (req, res) => {
+  try {
+    const tasks = await taskModel.getAllTasks()
+    res.json(tasks)
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
 }
 
-controller.getTasks = (req, res) => {
-  res.json(tasks)
-}
+controller.getTaskById = async (req, res) => {
+  try {
+    const taskId = Number.parseInt(req.params.id, 10)
+    const task = await taskModel.getTaskById(taskId)
 
-controller.getTaskById = (req, res) => {
-  const taskId = Number.parseInt(req.params.id, 10)
-  const task = tasks.find(task => task.id === taskId)
-
-  if (!task) {
-    return res.status(404).json({
-      error: 'Task not found'
-    })
-  }
-
-  res.json(task)
-}
-
-controller.createTask = (req, res) => {
-  const newTask = req.body
-
-  if (!newTask.title || newTask.title.trim() === '') {
-    return res.status(400).json({
-      error: 'Title is required'
-    })
-  }
-
-  newTask.id = getNextId()
-  newTask.title = newTask.title.trim()
-  newTask.completed = Boolean(newTask.completed)
-
-  tasks.push(newTask)
-
-  res.status(201).json(newTask)
-}
-
-controller.updateTask = (req, res) => {
-  const taskId = Number.parseInt(req.params.id, 10)
-  const updatedData = req.body
-  const task = tasks.find(task => task.id === taskId)
-
-  if (!task) {
-    return res.status(404).json({
-      error: 'Task not found'
-    })
-  }
-
-  if (updatedData.title !== undefined) {
-    if (updatedData.title.trim() === '') {
-      return res.status(400).json({
-        error: 'Title cannot be empty'
+    if (!task) {
+      return res.status(404).json({
+        error: 'Task not found'
       })
     }
 
-    updatedData.title = updatedData.title.trim()
+    res.json(task)
+  } catch (error) {
+    res.status(500).json({ error: error.message })
   }
-
-  Object.assign(task, updatedData)
-
-  if (updatedData.completed !== undefined) {
-    task.completed = Boolean(updatedData.completed)
-  }
-
-  res.json(task)
 }
 
-controller.replaceTask = (req, res) => {
-  const taskId = Number.parseInt(req.params.id, 10)
-  const newTaskData = req.body
-  const taskIndex = tasks.findIndex(task => task.id === taskId)
+controller.createTask = async (req, res) => {
+  try {
+    const newTask = req.body
 
-  if (taskIndex === -1) {
-    return res.status(404).json({
-      error: 'Task not found'
+    if (!newTask.title || newTask.title.trim() === '') {
+      return res.status(400).json({
+        error: 'Title is required'
+      })
+    }
+
+    const createdTask = await taskModel.createTask({
+      title: newTask.title.trim(),
+      completed: Boolean(newTask.completed)
     })
+
+    res.status(201).json(createdTask)
+  } catch (error) {
+    res.status(500).json({ error: error.message })
   }
-
-  if (!newTaskData.title || newTaskData.title.trim() === '') {
-    return res.status(400).json({
-      error: 'Title is required'
-    })
-  }
-
-  newTaskData.id = taskId
-  newTaskData.title = newTaskData.title.trim()
-  newTaskData.completed = Boolean(newTaskData.completed)
-
-  tasks[taskIndex] = newTaskData
-
-  res.json(newTaskData)
 }
 
-controller.deleteTask = (req, res) => {
-  const taskId = Number.parseInt(req.params.id, 10)
-  const taskIndex = tasks.findIndex(task => task.id === taskId)
+controller.updateTask = async (req, res) => {
+  try {
+    const taskId = Number.parseInt(req.params.id, 10)
+    const updatedData = req.body
+    const existingTask = await taskModel.getTaskById(taskId)
 
-  if (taskIndex === -1) {
-    return res.status(404).json({
-      error: 'Task not found'
-    })
+    if (!existingTask) {
+      return res.status(404).json({
+        error: 'Task not found'
+      })
+    }
+
+    if (updatedData.title !== undefined) {
+      if (updatedData.title.trim() === '') {
+        return res.status(400).json({
+          error: 'Title cannot be empty'
+        })
+      }
+
+      updatedData.title = updatedData.title.trim()
+    }
+
+    if (updatedData.completed !== undefined) {
+      updatedData.completed = Boolean(updatedData.completed)
+    }
+
+    const updatedTask = await taskModel.updateTask(taskId, updatedData)
+
+    res.json(updatedTask)
+  } catch (error) {
+    res.status(500).json({ error: error.message })
   }
+}
 
-  tasks.splice(taskIndex, 1)
+controller.replaceTask = async (req, res) => {
+  try {
+    const taskId = Number.parseInt(req.params.id, 10)
+    const newTaskData = req.body
 
-  res.status(204).send()
+    const existingTask = await taskModel.getTaskById(taskId)
+
+    if (!existingTask) {
+      return res.status(404).json({
+        error: 'Task not found'
+      })
+    }
+
+    if (!newTaskData.title || newTaskData.title.trim() === '') {
+      return res.status(400).json({
+        error: 'Title is required'
+      })
+    }
+
+    const replacedTask = await taskModel.replaceTask(taskId, {
+      title: newTaskData.title.trim(),
+      completed: Boolean(newTaskData.completed)
+    })
+
+    res.json(replacedTask)
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+}
+
+controller.deleteTask = async (req, res) => {
+  try {
+    const taskId = Number.parseInt(req.params.id, 10)
+    const deleted = await taskModel.deleteTask(taskId)
+
+    if (!deleted) {
+      return res.status(404).json({
+        error: 'Task not found'
+      })
+    }
+
+    res.status(204).send()
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
 }
