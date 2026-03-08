@@ -1,5 +1,6 @@
 import express from 'express'
 import { tasksRouter } from './tasks.js'
+import { usersRouter } from './users.js'
 
 const router = express.Router()
 
@@ -10,7 +11,8 @@ router.get('/', (req, res) => {
     routes: {
       home: '/',
       health: '/health',
-      tasks: '/api/v1/tasks'
+      tasks: '/api/v1/tasks',
+      users: '/api/v1/users'
     }
   })
 })
@@ -23,5 +25,6 @@ router.get('/health', (req, res) => {
 })
 
 router.use('/api/v1', tasksRouter)
+router.use('/api/v1', usersRouter)
 
 export { router }
