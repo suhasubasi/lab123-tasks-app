@@ -1,0 +1,23 @@
+<h2>Friday page</h2>
+
+<% if (error) { %>
+  <p><strong>Error:</strong> <%= error %></p>
+<% } else { %>
+  <p><strong>Date:</strong> <%= dateString %></p>
+  <p><strong>Day:</strong> <%= weekday %></p>
+
+  <% if (isFriday) { %>
+    <h3>It is Friday!</h3>
+    <p>Friday mood activated.</p>
+    <p>Time for snacks, music, and a little bit of chaos.</p>
+    <p>Weekend is very close now.</p>
+  <% } else { %>
+    <p>It is not Friday today.</p>
+  <% } %>
+<% } %>
+
+<p>Try testing with the query string:</p>
+<ul>
+  <li><a href="/friday?date=2026-02-27">/friday?date=2026-02-27</a></li>
+  <li><a href="/friday?date=2026-02-26">/friday?date=2026-02-26</a></li>
+</ul>

@@ -3,6 +3,7 @@ import { tasksRouter } from './tasks.js'
 import { usersRouter } from './users.js'
 import { apiKeyRouter } from './apikey.js'
 import { jwtRouter } from './jwt.js'
+import { fridayRouter } from './friday.js'
 
 const router = express.Router()
 
@@ -17,6 +18,7 @@ router.get('/health', (req, res) => {
   })
 })
 
+router.use('/', fridayRouter)
 router.use('/api/v1', tasksRouter)
 router.use('/api/v1', usersRouter)
 router.use('/api/v1', apiKeyRouter)
