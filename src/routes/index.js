@@ -7,19 +7,7 @@ import { jwtRouter } from './jwt.js'
 const router = express.Router()
 
 router.get('/', (req, res) => {
-  res.json({
-    message: 'Welcome to the lab project server',
-    version: '1.0.0',
-    routes: {
-      home: '/',
-      health: '/health',
-      tasks: '/api/v1/tasks',
-      users: '/api/v1/users',
-      apikeyProtected: '/api/v1/apikey/protected',
-      jwtLogin: '/api/v1/jwt/login',
-      jwtToken: '/api/v1/jwt/token'
-    }
-  })
+  res.render('home/index')
 })
 
 router.get('/health', (req, res) => {
