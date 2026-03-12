@@ -1,0 +1,22 @@
+<h2>View task</h2>
+
+<table border="1" cellpadding="6">
+  <tr>
+    <th>Task id</th>
+    <td><%= task.id %></td>
+  </tr>
+  <tr>
+    <th>Title</th>
+    <td><%= task.title %></td>
+  </tr>
+  <tr>
+    <th>Completed</th>
+    <td><%= task.completed ? 'Yes' : 'No' %></td>
+  </tr>
+</table>
+
+<p>
+  <a href="/crud/tasks/<%= task.id %>/update">Update</a> |
+  <a href="/crud/tasks/<%= task.id %>/delete">Delete</a> |
+  <a href="/crud/tasks">Back to all tasks</a>
+</p>

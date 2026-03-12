@@ -1,0 +1,25 @@
+<h2>Update task</h2>
+
+<% if (typeof error !== 'undefined' && error) { %>
+  <p><strong>Error:</strong> <%= error %></p>
+<% } %>
+
+<form method="post">
+  <p>
+    Title:<br>
+    <input type="text" name="title" value="<%= task.title %>">
+  </p>
+
+  <p>
+    <label>
+      <input type="checkbox" name="completed" <%= task.completed ? 'checked' : '' %>>
+      Completed
+    </label>
+  </p>
+
+  <p>
+    <button type="submit">Update task</button>
+  </p>
+</form>
+
+<p><a href="/crud/tasks/<%= task.id %>">Back to task</a></p>
