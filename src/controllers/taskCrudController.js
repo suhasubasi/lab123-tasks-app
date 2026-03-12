@@ -49,6 +49,7 @@ controller.createTaskPost = async (req, res) => {
       completed
     })
 
+    req.session.flashMessage = `Task with id: ${createdTask.id} created.`
     res.redirect(`/crud/tasks/${createdTask.id}`)
   } catch (error) {
     res.status(500).send('Failed to create task.')
@@ -94,6 +95,7 @@ controller.updateTaskPost = async (req, res) => {
       completed
     })
 
+    req.session.flashMessage = `Task with id: ${taskId} updated.`
     res.redirect(`/crud/tasks/${taskId}`)
   } catch (error) {
     res.status(500).send('Failed to update task.')
@@ -124,6 +126,7 @@ controller.deleteTaskPost = async (req, res) => {
       return res.status(404).send('Task not found.')
     }
 
+    req.session.flashMessage = `Task with id: ${taskId} deleted.`
     res.redirect('/crud/tasks')
   } catch (error) {
     res.status(500).send('Failed to delete task.')

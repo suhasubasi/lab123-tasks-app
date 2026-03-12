@@ -3,8 +3,13 @@ import morgan from 'morgan'
 import helmet from 'helmet'
 import path from 'path'
 import expressLayouts from 'express-ejs-layouts'
+import session from 'express-session'
+
+import { sessionOptions } from './config/sessionOptions.js'
+import { flashMiddleware } from './middleware/flashMessage.js'
 import { localsMiddleware } from './middleware/locals.js'
 import { router } from './routes/index.js'
+
 
 const app = express()
 
@@ -19,7 +24,9 @@ app.use(morgan('dev'))
 app.use(helmet())
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
+app.use(session(sessionOptions))
 app.use(localsMiddleware.injectBaseUrl)
+app.use(flashMiddleware.flashMessage)
 
 app.use('/', router)
 
